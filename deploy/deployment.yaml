@@ -1,0 +1,75 @@
+apiVersion: v1
+kind: Secret
+metadata:
+  name: vega-secrets
+type: Opaque
+stringData:
+  QBO_CLIENT_ID: "REPLACE_ME"
+  QBO_CLIENT_SECRET: "REPLACE_ME"
+  QBO_REDIRECT_URI: "https://YOUR_ROUTE/api/auth/callback"
+  QBO_ENVIRONMENT: "sandbox"
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: vega
+  labels:
+    app: vega
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: vega
+  template:
+    metadata:
+      labels:
+        app: vega
+    spec:
+      containers:
+        - name: vega
+          image: quay.io/sshaaf/quickbooks-rust:latest
+          ports:
+            - containerPort: 3000
+          envFrom:
+            - secretRef:
+                name: vega-secrets
+          env:
+            - name: SERVER_HOST
+              value: "0.0.0.0"
+            - name: SERVER_PORT
+              value: "3000"
+            - name: RUST_LOG
+              value: "info"
+          readinessProbe:
+            httpGet:
+              path: /api/auth/status
+              port: 3000
+            initialDelaySeconds: 5
+            periodSeconds: 10
+          livenessProbe:
+            httpGet:
+              path: /api/auth/status
+              port: 3000
+            initialDelaySeconds: 10
+            periodSeconds: 30
+          resources:
+            requests:
+              memory: "64Mi"
+              cpu: "100m"
+            limits:
+              memory: "256Mi"
+              cpu: "500m"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: vega
+  labels:
+    app: vega
+spec:
+  selector:
+    app: vega
+  ports:
+    - port: 3000
+      targetPort: 3000
+      protocol: TCP

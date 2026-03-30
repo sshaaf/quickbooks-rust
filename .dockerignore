@@ -1,0 +1,13 @@
+target/
+.env
+Secrets.toml
+Secrets.dev.toml
+.git/
+.github/
+.gitignore
+.idea/
+.vscode/
+deploy/
+backend-spec.md
+README.md
+*.log

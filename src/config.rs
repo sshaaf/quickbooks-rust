@@ -30,7 +30,7 @@ impl AppConfig {
             qbo_base_url,
             qbo_auth_url: "https://appcenter.intuit.com/connect/oauth2".into(),
             qbo_token_url: "https://oauth.platform.intuit.com/oauth2/v1/tokens/bearer".into(),
-            server_host: env::var("SERVER_HOST").unwrap_or_else(|_| "127.0.0.1".into()),
+            server_host: env::var("SERVER_HOST").unwrap_or_else(|_| "0.0.0.0".into()),
             server_port: env::var("SERVER_PORT")
                 .unwrap_or_else(|_| "3000".into())
                 .parse()
