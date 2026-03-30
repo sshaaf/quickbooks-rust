@@ -1,0 +1,69 @@
+{% extends "base.html" %}
+
+{% block title %}{{ report_title }}{% endblock %}
+{% block heading %}{{ report_title }}{% endblock %}
+
+{% block content %}
+{% if connected %}
+
+<!-- Date range filter -->
+<form class="flex items-end gap-4 mb-6" method="get">
+    <div>
+        <label class="block text-sm font-medium text-gray-600 mb-1">Start Date</label>
+        <input type="date" name="start_date" value="{{ start_date }}"
+               class="block rounded-lg border border-gray-300 px-3 py-2 text-sm shadow-sm focus:border-indigo-500 focus:ring-indigo-500">
+    </div>
+    <div>
+        <label class="block text-sm font-medium text-gray-600 mb-1">End Date</label>
+        <input type="date" name="end_date" value="{{ end_date }}"
+               class="block rounded-lg border border-gray-300 px-3 py-2 text-sm shadow-sm focus:border-indigo-500 focus:ring-indigo-500">
+    </div>
+    <button type="submit"
+            class="px-4 py-2 bg-indigo-600 hover:bg-indigo-500 text-white text-sm font-medium rounded-lg transition-colors shadow-sm">
+        Apply
+    </button>
+</form>
+
+{% if !period.is_empty() %}
+<p class="text-sm text-gray-500 mb-4">Period: {{ period }}</p>
+{% endif %}
+
+{% if !columns.is_empty() %}
+<div class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
+    <table class="min-w-full divide-y divide-gray-200">
+        <thead class="bg-gray-50">
+            <tr>
+                {% for col in columns %}
+                <th class="px-6 py-3 text-xs font-semibold text-gray-500 uppercase tracking-wider {% if loop.first %}text-left{% else %}text-right{% endif %}">
+                    {{ col }}
+                </th>
+                {% endfor %}
+            </tr>
+        </thead>
+        <tbody class="divide-y divide-gray-50">
+            {% for row in rows %}
+            <tr class="{% if row.is_section_header %}bg-gray-50{% endif %} {% if row.is_total %}font-semibold border-t border-gray-200{% endif %}">
+                {% for cell in row.cells %}
+                <td class="px-6 py-2.5 text-sm whitespace-nowrap
+                    {% if loop.first %}text-left{% else %}text-right font-mono{% endif %}
+                    {% if row.is_section_header %}font-semibold text-gray-700{% else if row.is_total %}text-gray-900{% else %}text-gray-600{% endif %}"
+                    {% if loop.first %}style="padding-left: {{ row.depth * 24 + 24 }}px"{% endif %}>
+                    {{ cell }}
+                </td>
+                {% endfor %}
+            </tr>
+            {% endfor %}
+            {% if rows.is_empty() %}
+            <tr>
+                <td colspan="{{ columns.len() }}" class="px-6 py-12 text-center text-sm text-gray-400">No report data available.</td>
+            </tr>
+            {% endif %}
+        </tbody>
+    </table>
+</div>
+{% else %}
+<div class="text-center py-12 text-sm text-gray-400">No report data available. Try selecting a date range.</div>
+{% endif %}
+
+{% endif %}
+{% endblock %}

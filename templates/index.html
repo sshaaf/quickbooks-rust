@@ -1,0 +1,52 @@
+{% extends "base.html" %}
+
+{% block title %}Dashboard{% endblock %}
+{% block heading %}Dashboard{% endblock %}
+
+{% block content %}
+{% if connected %}
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+    <a href="/customers" class="block bg-white rounded-xl shadow-sm border border-gray-100 p-6 hover:shadow-md transition-shadow">
+        <p class="text-sm font-medium text-gray-500">Customers</p>
+        <p class="mt-1 text-2xl font-semibold text-gray-900">View All</p>
+    </a>
+    <a href="/invoices" class="block bg-white rounded-xl shadow-sm border border-gray-100 p-6 hover:shadow-md transition-shadow">
+        <p class="text-sm font-medium text-gray-500">Invoices</p>
+        <p class="mt-1 text-2xl font-semibold text-gray-900">View All</p>
+    </a>
+    <a href="/payments" class="block bg-white rounded-xl shadow-sm border border-gray-100 p-6 hover:shadow-md transition-shadow">
+        <p class="text-sm font-medium text-gray-500">Payments</p>
+        <p class="mt-1 text-2xl font-semibold text-gray-900">View All</p>
+    </a>
+    <a href="/accounts" class="block bg-white rounded-xl shadow-sm border border-gray-100 p-6 hover:shadow-md transition-shadow">
+        <p class="text-sm font-medium text-gray-500">Chart of Accounts</p>
+        <p class="mt-1 text-2xl font-semibold text-gray-900">View All</p>
+    </a>
+</div>
+
+<div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+    <a href="/reports/profit-and-loss" class="block bg-white rounded-xl shadow-sm border border-gray-100 p-6 hover:shadow-md transition-shadow">
+        <p class="text-sm font-medium text-gray-500">Report</p>
+        <p class="mt-1 text-xl font-semibold text-gray-900">Profit &amp; Loss</p>
+        <p class="mt-2 text-sm text-gray-400">View income and expense summary</p>
+    </a>
+    <a href="/reports/balance-sheet" class="block bg-white rounded-xl shadow-sm border border-gray-100 p-6 hover:shadow-md transition-shadow">
+        <p class="text-sm font-medium text-gray-500">Report</p>
+        <p class="mt-1 text-xl font-semibold text-gray-900">Balance Sheet</p>
+        <p class="mt-2 text-sm text-gray-400">View assets, liabilities, and equity</p>
+    </a>
+</div>
+{% else %}
+<div class="flex flex-col items-center justify-center py-24 text-center">
+    <div class="w-16 h-16 bg-indigo-100 rounded-full flex items-center justify-center mb-6">
+        <span class="text-3xl text-indigo-600">&#9889;</span>
+    </div>
+    <h3 class="text-xl font-semibold text-gray-900 mb-2">Get started with Vega</h3>
+    <p class="text-gray-500 max-w-md mb-8">Connect your QuickBooks account to view customers, invoices, payments, and financial reports all in one place.</p>
+    <a href="/api/auth/login"
+       class="inline-flex items-center gap-2 px-6 py-3 bg-indigo-600 hover:bg-indigo-500 text-white font-medium rounded-lg transition-colors shadow-sm">
+        Connect to QuickBooks
+    </a>
+</div>
+{% endif %}
+{% endblock %}

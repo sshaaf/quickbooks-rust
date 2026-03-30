@@ -1,0 +1,55 @@
+{% extends "base.html" %}
+
+{% block title %}Payments{% endblock %}
+{% block heading %}Payments{% endblock %}
+
+{% block content %}
+{% if connected %}
+<div class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
+    <table class="min-w-full divide-y divide-gray-200">
+        <thead class="bg-gray-50">
+            <tr>
+                <th class="px-6 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">ID</th>
+                <th class="px-6 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">Customer</th>
+                <th class="px-6 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">Date</th>
+                <th class="px-6 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">Deposit Account</th>
+                <th class="px-6 py-3 text-right text-xs font-semibold text-gray-500 uppercase tracking-wider">Amount</th>
+            </tr>
+        </thead>
+        <tbody class="divide-y divide-gray-100">
+            {% for p in payments %}
+            <tr class="hover:bg-gray-50 transition-colors">
+                <td class="px-6 py-4 text-sm font-medium text-gray-500 whitespace-nowrap">{{ p.id }}</td>
+                <td class="px-6 py-4 text-sm text-gray-900 whitespace-nowrap">{{ p.customer_name }}</td>
+                <td class="px-6 py-4 text-sm text-gray-500 whitespace-nowrap">{{ p.date }}</td>
+                <td class="px-6 py-4 text-sm text-gray-500 whitespace-nowrap">{{ p.deposit_account }}</td>
+                <td class="px-6 py-4 text-sm text-emerald-600 text-right whitespace-nowrap font-mono font-medium">{{ p.amount }}</td>
+            </tr>
+            {% endfor %}
+            {% if payments.is_empty() %}
+            <tr>
+                <td colspan="5" class="px-6 py-12 text-center text-sm text-gray-400">No payments found.</td>
+            </tr>
+            {% endif %}
+        </tbody>
+    </table>
+</div>
+
+{% if !prev_url.is_empty() || !next_url.is_empty() %}
+<div class="flex items-center justify-between mt-6">
+    <div class="text-sm text-gray-500">
+        Page {{ page }}{% if let Some(total) = total_count %} &middot; {{ total }} total{% endif %}
+    </div>
+    <div class="flex gap-2">
+        {% if !prev_url.is_empty() %}
+        <a href="{{ prev_url }}" class="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors">Previous</a>
+        {% endif %}
+        {% if !next_url.is_empty() %}
+        <a href="{{ next_url }}" class="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors">Next</a>
+        {% endif %}
+    </div>
+</div>
+{% endif %}
+
+{% endif %}
+{% endblock %}

@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+
+{% block title %}Company Info{% endblock %}
+{% block heading %}Company Info{% endblock %}
+
+{% block content %}
+{% if connected %}
+<div class="max-w-2xl bg-white rounded-xl shadow-sm border border-gray-100 p-8">
+    <dl class="space-y-6">
+        <div>
+            <dt class="text-sm font-medium text-gray-500">Company Name</dt>
+            <dd class="mt-1 text-xl font-semibold text-gray-900">{{ company_name }}</dd>
+        </div>
+        <div>
+            <dt class="text-sm font-medium text-gray-500">Legal Name</dt>
+            <dd class="mt-1 text-gray-900">{{ legal_name }}</dd>
+        </div>
+        <div>
+            <dt class="text-sm font-medium text-gray-500">Country</dt>
+            <dd class="mt-1 text-gray-900">{{ country }}</dd>
+        </div>
+        <div>
+            <dt class="text-sm font-medium text-gray-500">Fiscal Year Start</dt>
+            <dd class="mt-1 text-gray-900">{{ fiscal_year_start }}</dd>
+        </div>
+    </dl>
+</div>
+{% endif %}
+{% endblock %}

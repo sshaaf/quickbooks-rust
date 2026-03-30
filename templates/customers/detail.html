@@ -1,0 +1,28 @@
+<div class="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
+    <div class="flex items-center justify-between mb-6">
+        <h3 class="text-lg font-semibold text-gray-900">{{ customer.display_name }}</h3>
+        {% if customer.active %}
+        <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-emerald-100 text-emerald-700">Active</span>
+        {% else %}
+        <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-500">Inactive</span>
+        {% endif %}
+    </div>
+    <dl class="grid grid-cols-1 sm:grid-cols-2 gap-x-6 gap-y-4 text-sm">
+        <div>
+            <dt class="font-medium text-gray-500">Company</dt>
+            <dd class="mt-1 text-gray-900">{{ customer.company_name }}</dd>
+        </div>
+        <div>
+            <dt class="font-medium text-gray-500">Email</dt>
+            <dd class="mt-1 text-gray-900">{{ customer.email }}</dd>
+        </div>
+        <div>
+            <dt class="font-medium text-gray-500">Phone</dt>
+            <dd class="mt-1 text-gray-900">{{ customer.phone }}</dd>
+        </div>
+        <div>
+            <dt class="font-medium text-gray-500">Balance</dt>
+            <dd class="mt-1 text-gray-900 font-mono font-medium">{{ customer.balance }}</dd>
+        </div>
+    </dl>
+</div>

@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en" class="h-full">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vega &mdash; {% block title %}Dashboard{% endblock %}</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/htmx.org@2.0.4"></script>
+    <style>
+        [hx-indicator] .htmx-indicator { display: none; }
+        .htmx-request .htmx-indicator { display: inline-block; }
+    </style>
+</head>
+<body class="h-full bg-gray-50 text-gray-900">
+    <div class="flex h-full">
+
+        <!-- Sidebar -->
+        <aside class="w-64 flex-shrink-0 bg-slate-900 text-slate-300 flex flex-col">
+            <div class="px-6 py-5 border-b border-slate-700/50">
+                <h1 class="text-xl font-bold text-white tracking-widest">VEGA</h1>
+                <p class="text-[11px] text-slate-500 mt-0.5 uppercase tracking-wider">QuickBooks Dashboard</p>
+            </div>
+
+            <nav class="flex-1 px-3 py-4 space-y-0.5 text-sm overflow-y-auto">
+                <a href="/"
+                   class="flex items-center gap-3 px-3 py-2 rounded-lg {% if active_nav == "home" %}bg-slate-800 text-white font-medium{% else %}hover:bg-slate-800/60 hover:text-white{% endif %} transition-colors">
+                    <span class="w-5 text-center opacity-60">&#9711;</span> Dashboard
+                </a>
+
+                <p class="!mt-4 !mb-1 px-3 text-[10px] uppercase tracking-widest text-slate-500 font-semibold">Data</p>
+
+                <a href="/customers"
+                   class="flex items-center gap-3 px-3 py-2 rounded-lg {% if active_nav == "customers" %}bg-slate-800 text-white font-medium{% else %}hover:bg-slate-800/60 hover:text-white{% endif %} transition-colors">
+                    <span class="w-5 text-center opacity-60">&#9823;</span> Customers
+                </a>
+                <a href="/invoices"
+                   class="flex items-center gap-3 px-3 py-2 rounded-lg {% if active_nav == "invoices" %}bg-slate-800 text-white font-medium{% else %}hover:bg-slate-800/60 hover:text-white{% endif %} transition-colors">
+                    <span class="w-5 text-center opacity-60">&#9993;</span> Invoices
+                </a>
+                <a href="/payments"
+                   class="flex items-center gap-3 px-3 py-2 rounded-lg {% if active_nav == "payments" %}bg-slate-800 text-white font-medium{% else %}hover:bg-slate-800/60 hover:text-white{% endif %} transition-colors">
+                    <span class="w-5 text-center opacity-60">&#36;</span> Payments
+                </a>
+                <a href="/accounts"
+                   class="flex items-center gap-3 px-3 py-2 rounded-lg {% if active_nav == "accounts" %}bg-slate-800 text-white font-medium{% else %}hover:bg-slate-800/60 hover:text-white{% endif %} transition-colors">
+                    <span class="w-5 text-center opacity-60">&#9776;</span> Accounts
+                </a>
+
+                <p class="!mt-4 !mb-1 px-3 text-[10px] uppercase tracking-widest text-slate-500 font-semibold">Reports</p>
+
+                <a href="/reports/profit-and-loss"
+                   class="flex items-center gap-3 px-3 py-2 rounded-lg {% if active_nav == "profit-and-loss" %}bg-slate-800 text-white font-medium{% else %}hover:bg-slate-800/60 hover:text-white{% endif %} transition-colors">
+                    <span class="w-5 text-center opacity-60">&#8593;</span> Profit &amp; Loss
+                </a>
+                <a href="/reports/balance-sheet"
+                   class="flex items-center gap-3 px-3 py-2 rounded-lg {% if active_nav == "balance-sheet" %}bg-slate-800 text-white font-medium{% else %}hover:bg-slate-800/60 hover:text-white{% endif %} transition-colors">
+                    <span class="w-5 text-center opacity-60">&#9878;</span> Balance Sheet
+                </a>
+
+                <p class="!mt-4 !mb-1 px-3 text-[10px] uppercase tracking-widest text-slate-500 font-semibold">Settings</p>
+
+                <a href="/company"
+                   class="flex items-center gap-3 px-3 py-2 rounded-lg {% if active_nav == "company" %}bg-slate-800 text-white font-medium{% else %}hover:bg-slate-800/60 hover:text-white{% endif %} transition-colors">
+                    <span class="w-5 text-center opacity-60">&#9881;</span> Company Info
+                </a>
+            </nav>
+
+            <!-- Connection status -->
+            <div class="px-4 py-4 border-t border-slate-700/50">
+                {% if connected %}
+                <div class="flex items-center justify-between">
+                    <div class="flex items-center gap-2">
+                        <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+                        <span class="text-xs text-emerald-400 font-medium">Connected</span>
+                    </div>
+                    <button hx-post="/api/auth/disconnect"
+                            hx-on::after-request="window.location.href='/'"
+                            class="text-xs text-slate-500 hover:text-red-400 transition-colors cursor-pointer">
+                        Disconnect
+                    </button>
+                </div>
+                {% else %}
+                <a href="/api/auth/login"
+                   class="flex items-center justify-center gap-2 w-full px-4 py-2 bg-indigo-600 hover:bg-indigo-500 text-white text-sm font-medium rounded-lg transition-colors">
+                    Connect to QuickBooks
+                </a>
+                {% endif %}
+            </div>
+        </aside>
+
+        <!-- Main content -->
+        <div class="flex-1 flex flex-col overflow-hidden">
+            <header class="bg-white border-b border-gray-200 px-8 py-4 flex-shrink-0">
+                <h2 class="text-lg font-semibold text-gray-800">{% block heading %}Dashboard{% endblock %}</h2>
+            </header>
+
+            <main class="flex-1 overflow-y-auto p-8">
+                {% if !error_message.is_empty() %}
+                <div class="mb-6 rounded-lg border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700">
+                    {{ error_message }}
+                </div>
+                {% endif %}
+
+                {% if !connected %}
+                <div class="mb-6 rounded-lg border border-amber-200 bg-amber-50 px-4 py-3 text-sm text-amber-700">
+                    Not connected to QuickBooks.
+                    <a href="/api/auth/login" class="font-medium underline hover:text-amber-900">Connect now</a>
+                    to view your data.
+                </div>
+                {% endif %}
+
+                {% block content %}{% endblock %}
+            </main>
+        </div>
+    </div>
+</body>
+</html>

@@ -1,0 +1,54 @@
+<div class="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
+    <div class="flex items-center justify-between mb-6">
+        <h3 class="text-lg font-semibold text-gray-900">Invoice #{{ invoice.doc_number }}</h3>
+        {% if invoice.balance != "$0.00" %}
+        <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-amber-100 text-amber-700">Outstanding</span>
+        {% else %}
+        <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-emerald-100 text-emerald-700">Paid</span>
+        {% endif %}
+    </div>
+    <dl class="grid grid-cols-1 sm:grid-cols-2 gap-x-6 gap-y-4 text-sm">
+        <div>
+            <dt class="font-medium text-gray-500">Customer</dt>
+            <dd class="mt-1 text-gray-900">{{ invoice.customer_name }}</dd>
+        </div>
+        <div>
+            <dt class="font-medium text-gray-500">Date</dt>
+            <dd class="mt-1 text-gray-900">{{ invoice.date }}</dd>
+        </div>
+        <div>
+            <dt class="font-medium text-gray-500">Due Date</dt>
+            <dd class="mt-1 text-gray-900">{{ invoice.due_date }}</dd>
+        </div>
+        <div>
+            <dt class="font-medium text-gray-500">Total</dt>
+            <dd class="mt-1 text-gray-900 font-mono font-medium">{{ invoice.total }}</dd>
+        </div>
+        <div>
+            <dt class="font-medium text-gray-500">Balance Due</dt>
+            <dd class="mt-1 font-mono font-medium {% if invoice.balance != "$0.00" %}text-amber-600{% else %}text-emerald-600{% endif %}">{{ invoice.balance }}</dd>
+        </div>
+    </dl>
+
+    {% if !invoice.lines.is_empty() %}
+    <div class="mt-6 border-t border-gray-100 pt-4">
+        <h4 class="text-sm font-semibold text-gray-700 mb-3">Line Items</h4>
+        <table class="min-w-full text-sm">
+            <thead>
+                <tr class="text-left text-xs text-gray-500 uppercase">
+                    <th class="pb-2 font-semibold">Description</th>
+                    <th class="pb-2 font-semibold text-right">Amount</th>
+                </tr>
+            </thead>
+            <tbody class="divide-y divide-gray-50">
+                {% for line in invoice.lines %}
+                <tr>
+                    <td class="py-2 text-gray-700">{{ line.description }}</td>
+                    <td class="py-2 text-gray-900 text-right font-mono">{{ line.amount }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    {% endif %}
+</div>

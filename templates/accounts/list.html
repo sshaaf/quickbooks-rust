@@ -1,0 +1,63 @@
+{% extends "base.html" %}
+
+{% block title %}Accounts{% endblock %}
+{% block heading %}Chart of Accounts{% endblock %}
+
+{% block content %}
+{% if connected %}
+<div class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
+    <table class="min-w-full divide-y divide-gray-200">
+        <thead class="bg-gray-50">
+            <tr>
+                <th class="px-6 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">Name</th>
+                <th class="px-6 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">Type</th>
+                <th class="px-6 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">Sub-Type</th>
+                <th class="px-6 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">Classification</th>
+                <th class="px-6 py-3 text-right text-xs font-semibold text-gray-500 uppercase tracking-wider">Balance</th>
+                <th class="px-6 py-3 text-center text-xs font-semibold text-gray-500 uppercase tracking-wider">Status</th>
+            </tr>
+        </thead>
+        <tbody class="divide-y divide-gray-100">
+            {% for a in accounts %}
+            <tr class="hover:bg-gray-50 transition-colors">
+                <td class="px-6 py-4 text-sm font-medium text-gray-900 whitespace-nowrap">{{ a.name }}</td>
+                <td class="px-6 py-4 text-sm text-gray-500 whitespace-nowrap">{{ a.account_type }}</td>
+                <td class="px-6 py-4 text-sm text-gray-500 whitespace-nowrap">{{ a.sub_type }}</td>
+                <td class="px-6 py-4 text-sm text-gray-500 whitespace-nowrap">{{ a.classification }}</td>
+                <td class="px-6 py-4 text-sm text-gray-900 text-right whitespace-nowrap font-mono">{{ a.balance }}</td>
+                <td class="px-6 py-4 text-center">
+                    {% if a.active %}
+                    <span class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-emerald-100 text-emerald-700">Active</span>
+                    {% else %}
+                    <span class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-500">Inactive</span>
+                    {% endif %}
+                </td>
+            </tr>
+            {% endfor %}
+            {% if accounts.is_empty() %}
+            <tr>
+                <td colspan="6" class="px-6 py-12 text-center text-sm text-gray-400">No accounts found.</td>
+            </tr>
+            {% endif %}
+        </tbody>
+    </table>
+</div>
+
+{% if !prev_url.is_empty() || !next_url.is_empty() %}
+<div class="flex items-center justify-between mt-6">
+    <div class="text-sm text-gray-500">
+        Page {{ page }}{% if let Some(total) = total_count %} &middot; {{ total }} total{% endif %}
+    </div>
+    <div class="flex gap-2">
+        {% if !prev_url.is_empty() %}
+        <a href="{{ prev_url }}" class="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors">Previous</a>
+        {% endif %}
+        {% if !next_url.is_empty() %}
+        <a href="{{ next_url }}" class="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors">Next</a>
+        {% endif %}
+    </div>
+</div>
+{% endif %}
+
+{% endif %}
+{% endblock %}
